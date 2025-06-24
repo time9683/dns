@@ -154,26 +154,21 @@ func deserializeAswer(data []byte, init_position int) (DnsRRF, error) {
 	var buff []byte
 
 	if data[init_position] == 192 {
-		// fmt.Println("first")
 		text_pos := data[init_position+1]
 		_, buff = extractLabel(data[text_pos:])
 		last = init_position + 1
 
 	} else {
-		// fmt.Println("second")
 
 		last, buff = extractLabel(data)
 	}
 
-	// fmt.Println("aqui no pasas")
 	rrf.Name = string(buff)
 	rrf.Type = binary.BigEndian.Uint16(data[last+1 : last+3])
 	rrf.Class = binary.BigEndian.Uint16(data[last+3 : last+5])
 	rrf.Tll = binary.BigEndian.Uint32(data[last+5 : last+9])
 	rrf.RdLen = binary.BigEndian.Uint16(data[last+9 : last+11])
 	var numbers []string
-
-	// fmt.Println("len all", data[last+11:])
 
 	for _, val := range data[last+11:] {
 		numbers = append(numbers, fmt.Sprintf("%d", val))
